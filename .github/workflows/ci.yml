@@ -1,4 +1,4 @@
-name: CI - Petite Maison Epouvante
+name: CI/CD - Petite Maison Epouvante
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  backend-tests:
-    name: Build and test backend
+  backend-ci-cd:
+    name: Build, test, dockerize and scan backend
     runs-on: ubuntu-latest
 
     defaults:
@@ -33,3 +33,26 @@ jobs:
 
       - name: Compiler et lancer les tests
         run: ./mvnw clean test
+
+      - name: Creer le package JAR
+        run: ./mvnw package -DskipTests
+
+      - name: Construire image Docker
+        run: docker build -t epouvante-backend:latest .
+
+      - name: Scanner image Docker avec Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: epouvante-backend:latest
+          format: table
+          exit-code: 0
+          severity: CRITICAL,HIGH
+
+      - name: Sauvegarder image Docker
+        run: docker save epouvante-backend:latest -o epouvante-backend.tar
+
+      - name: Publier image Docker comme artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: epouvante-backend-docker-image
+          path: backend/epouvante/epouvante-backend.tar
