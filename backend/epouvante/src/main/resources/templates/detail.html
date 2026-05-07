@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Détail annonce</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/">Accueil</a>
+    <a href="/web/annonces">Annonces</a>
+    <a href="/login" th:if="${username == null}">Se connecter</a>
+</nav>
+
+<main class="container">
+
+    <div class="detail-card">
+
+        <img class="detail-image"
+             th:if="${annonce.imageUrl != null and !annonce.imageUrl.isEmpty()}"
+             th:src="${annonce.imageUrl}"
+             alt="Image de l’objet">
+
+        <span class="badge" th:text="${annonce.type}">Type</span>
+
+        <h1 th:text="${annonce.titre}">Titre</h1>
+
+        <p class="description" th:text="${annonce.description}">
+            Description complète
+        </p>
+
+        <p class="owner" th:text="'Publié par : ' + ${annonce.proprietaire}">
+            Publié par
+        </p>
+
+        <div class="contact-box" th:if="${annonce.contact != null and !annonce.contact.isEmpty()}">
+            <p>Contacter le propriétaire :</p>
+            <a th:href="'mailto:' + ${annonce.contact}" th:text="${annonce.contact}"></a>
+        </div>
+
+        <div class="actions-row"
+             th:if="${username != null and (isAdmin or username == annonce.proprietaire)}">
+
+            <a th:href="@{'/web/edit/' + ${annonce.id}}" class="btn primary">
+                Modifier
+            </a>
+
+            <form th:action="@{'/web/delete/' + ${annonce.id}}" method="post">
+                <button type="submit" class="btn delete">Supprimer</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

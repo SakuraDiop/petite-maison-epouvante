@@ -1,0 +1,289 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f1ec;
+    color: #1f2937;
+}
+
+.hero {
+    height: 100vh;
+    background:
+        linear-gradient(rgba(10, 10, 10, 0.78), rgba(10, 10, 10, 0.78)),
+        url('/images/maison-epouvante.jpg') no-repeat center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content {
+    color: white;
+    text-align: center;
+    max-width: 850px;
+    padding: 40px;
+}
+
+.hero h1 {
+    font-size: 56px;
+    margin-bottom: 16px;
+}
+
+.hero p {
+    font-size: 22px;
+    margin-bottom: 30px;
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+.navbar {
+    background: #111827;
+    padding: 16px 40px;
+}
+
+.navbar a {
+    color: white;
+    margin-right: 20px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.container {
+    padding: 40px;
+}
+
+.container h1 {
+    margin-bottom: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.card-title {
+    text-decoration: none;
+    color: #111827;
+}
+
+.card-title:hover {
+    color: #7f1d1d;
+}
+
+.detail-card {
+    max-width: 760px;
+    background: white;
+    padding: 34px;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.description {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.badge {
+    display: inline-block;
+    background: #7f1d1d;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin: 10px 0;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.owner {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 6px 6px 6px 0;
+}
+
+.btn.small {
+    padding: 8px 14px;
+    background: #374151;
+    color: white;
+}
+
+.primary {
+    background: #b45309;
+    color: white;
+}
+
+.secondary {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.delete {
+    background: #dc2626;
+    color: white;
+}
+
+.actions-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.form-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 520px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+textarea {
+    min-height: 120px;
+}
+.card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.detail-image {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 24px;
+}
+
+.contact-box {
+    margin-top: 24px;
+    padding: 18px;
+    background: #f9fafb;
+    border-left: 4px solid #b45309;
+    border-radius: 10px;
+}
+
+.contact-box p {
+    margin-top: 0;
+    font-weight: 600;
+}
+
+.contact-box a {
+    color: #7f1d1d;
+    font-weight: 600;
+    text-decoration: none;
+}
+.nav-user {
+    color: #fbbf24;
+    margin-right: 16px;
+    font-weight: 600;
+}
+.page-section {
+    min-height: 100vh;
+    background: #111827;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(17, 24, 39, 0.95);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+.form-container h1 {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 42px;
+}
+
+.subtitle {
+    color: #d1d5db;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.modern-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modern-form input,
+.modern-form textarea,
+.modern-form select {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid #374151;
+    background: #1f2937;
+    color: white;
+    font-size: 16px;
+}
+
+.modern-form textarea {
+    resize: vertical;
+}
+
+.modern-form input::placeholder,
+.modern-form textarea::placeholder {
+    color: #9ca3af;
+}
+
+.upload-box {
+    background: #1f2937;
+    border: 2px dashed #4b5563;
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+}
+
+.upload-box label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.full {
+    width: 100%;
+}

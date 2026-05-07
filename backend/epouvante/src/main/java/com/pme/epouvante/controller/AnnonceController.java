@@ -2,7 +2,6 @@ package com.pme.epouvante.controller;
 
 import com.pme.epouvante.entity.Annonce;
 import com.pme.epouvante.service.AnnonceService;
-import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +28,13 @@ public class AnnonceController {
     }
 
     @PostMapping
-    public Annonce create(@Valid @RequestBody Annonce annonce, Authentication auth) {
+    public Annonce create(@RequestBody Annonce annonce, Authentication auth) {
         return service.create(annonce, auth.getName());
     }
 
     @PutMapping("/{id}")
     public Annonce update(@PathVariable Long id,
-                          @Valid @RequestBody Annonce annonce,
+                          @RequestBody Annonce annonce,
                           Authentication auth) {
 
         boolean isAdmin = auth.getAuthorities().stream()

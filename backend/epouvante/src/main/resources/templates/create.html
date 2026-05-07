@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer une annonce</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/">Accueil</a>
+    <a href="/web/annonces">Annonces</a>
+    <a href="/logout">Déconnexion</a>
+</nav>
+
+<section class="page-section">
+
+    <div class="form-container">
+
+        <h1>Publier une annonce</h1>
+
+        <p class="subtitle">
+            Partage un objet étrange, vintage ou culte avec la communauté.
+        </p>
+
+        <form method="post"
+              th:action="@{/web/create}"
+              enctype="multipart/form-data"
+              class="modern-form">
+
+            <input type="text"
+                   name="titre"
+                   placeholder="Titre de l’annonce"
+                   required>
+
+            <textarea name="description"
+                      placeholder="Description de l’objet"
+                      rows="5"
+                      required></textarea>
+
+            <select name="type" required>
+                <option value="">Choisir un type</option>
+                <option value="DON">Don</option>
+                <option value="ECHANGE">Échange</option>
+            </select>
+
+            <div class="upload-box">
+                <label>Image de l’objet</label>
+
+                <input type="file"
+                       name="imageFile"
+                       accept="image/*">
+            </div>
+
+            <input type="email"
+                   name="contact"
+                   placeholder="Email de contact"
+                   required>
+
+            <button type="submit" class="btn primary full">
+                Publier l’annonce
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+</body>
+</html>

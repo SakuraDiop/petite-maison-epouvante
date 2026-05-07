@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier une annonce</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/">Accueil</a>
+    <a href="/web/annonces">Annonces</a>
+    <a th:href="@{'/web/annonces/' + ${annonce.id}}">Retour au détail</a>
+</nav>
+
+<section class="page-section">
+
+    <div class="form-container">
+
+        <h1>Modifier l’annonce</h1>
+
+        <p class="subtitle">
+            Mets à jour les informations de ton objet.
+        </p>
+
+        <form method="post"
+              th:action="@{'/web/edit/' + ${annonce.id}}"
+              enctype="multipart/form-data"
+              class="modern-form">
+
+            <input type="text"
+                   name="titre"
+                   th:value="${annonce.titre}"
+                   required>
+
+            <textarea name="description"
+                      rows="5"
+                      required
+                      th:text="${annonce.description}"></textarea>
+
+            <select name="type" required>
+                <option value="DON" th:selected="${annonce.type == 'DON'}">Don</option>
+                <option value="ECHANGE" th:selected="${annonce.type == 'ECHANGE'}">Échange</option>
+            </select>
+
+            <div class="upload-box">
+                <label>Changer l’image de l’objet</label>
+
+                <input type="file"
+                       name="imageFile"
+                       accept="image/*">
+
+                <small>Si tu ne choisis pas de nouvelle image, l’image actuelle sera conservée.</small>
+            </div>
+
+            <input type="email"
+                   name="contact"
+                   th:value="${annonce.contact}"
+                   placeholder="Email de contact"
+                   required>
+
+            <button type="submit" class="btn primary full">
+                Enregistrer les modifications
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+</body>
+</html>

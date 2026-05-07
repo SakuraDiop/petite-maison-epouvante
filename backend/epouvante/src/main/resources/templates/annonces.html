@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Annonces</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/">Accueil</a>
+    <a href="/web/annonces">Annonces</a>
+
+    <span th:if="${username != null and !isAdmin}">
+        <a href="/web/create">Créer une annonce</a>
+    </span>
+
+    <span th:if="${username != null}">
+        <span class="nav-user" th:text="'Connecté : ' + ${username}"></span>
+        <a href="/logout">Déconnexion</a>
+    </span>
+
+    <a href="/login" th:if="${username == null}">Se connecter</a>
+</nav>
+
+<main class="container">
+
+    <h1>Annonces disponibles</h1>
+
+    <div class="grid">
+        <div class="card" th:each="annonce : ${annonces}">
+
+            <img class="card-image"
+                 th:if="${annonce.imageUrl != null and !annonce.imageUrl.isEmpty()}"
+                 th:src="${annonce.imageUrl}"
+                 alt="Image de l’objet">
+
+            <a th:href="@{'/web/annonces/' + ${annonce.id}}" class="card-title">
+                <h2 th:text="${annonce.titre}">Titre</h2>
+            </a>
+
+            <p th:text="${annonce.description}">Description</p>
+
+            <a th:href="@{'/web/annonces/' + ${annonce.id}}" class="badge" th:text="${annonce.type}">
+                Type
+            </a>
+
+            <p class="owner" th:text="'Publié par : ' + ${annonce.proprietaire}">
+                Publié par
+            </p>
+
+            <a th:href="@{'/web/annonces/' + ${annonce.id}}" class="btn small">
+                Voir le détail
+            </a>
+
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>
