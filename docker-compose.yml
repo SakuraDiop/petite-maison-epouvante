@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:15
     container_name: pme_postgres
+    restart: unless-stopped
 
     environment:
       POSTGRES_DB: epouvante
@@ -14,5 +15,32 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+    networks:
+      - pme_network
+
+  app:
+    image: ghcr.io/sakuradiop/epouvante-backend:latest
+    container_name: pme_app
+    restart: unless-stopped
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/epouvante
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+    networks:
+      - pme_network
+
 volumes:
   postgres_data:
+
+networks:
+  pme_network:
+    driver: bridge

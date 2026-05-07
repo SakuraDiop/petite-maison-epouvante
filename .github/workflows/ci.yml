@@ -8,9 +8,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
 jobs:
   backend-ci-cd:
-    name: Build, test, dockerize and scan backend
+    name: Build, test, dockerize, scan and publish
     runs-on: ubuntu-latest
 
     defaults:
@@ -37,22 +42,27 @@ jobs:
       - name: Creer le package JAR
         run: ./mvnw package -DskipTests
 
+      - name: Connexion au registre Docker GitHub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Definir le nom de l'image Docker
+        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/epouvante-backend:latest" >> $GITHUB_ENV
+
       - name: Construire image Docker
-        run: docker build -t epouvante-backend:latest .
+        run: docker build -t $IMAGE_NAME .
 
       - name: Scanner image Docker avec Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: epouvante-backend:latest
+          image-ref: ${{ env.IMAGE_NAME }}
           format: table
           exit-code: 0
           severity: CRITICAL,HIGH
 
-      - name: Sauvegarder image Docker
-        run: docker save epouvante-backend:latest -o epouvante-backend.tar
-
-      - name: Publier image Docker comme artefact
-        uses: actions/upload-artifact@v4
-        with:
-          name: epouvante-backend-docker-image
-          path: backend/epouvante/epouvante-backend.tar
+      - name: Publier image Docker dans GitHub Container Registry
+        if: github.ref == 'refs/heads/main'
+        run: docker push $IMAGE_NAME
