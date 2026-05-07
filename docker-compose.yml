@@ -19,7 +19,9 @@ services:
       - pme_network
 
   app:
-    image: ghcr.io/sakuradiop/epouvante-backend:latest
+    build:
+      context: ./backend/epouvante
+      dockerfile: Dockerfile
     container_name: pme_app
     restart: unless-stopped
 

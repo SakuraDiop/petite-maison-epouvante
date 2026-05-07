@@ -50,7 +50,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Definir le nom de l'image Docker
-        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/epouvante-backend:latest" >> $GITHUB_ENV
+        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/epouvante-backend:latest" | tr '[:upper:]' '[:lower:]' >> $GITHUB_ENV
 
       - name: Construire image Docker
         run: docker build -t $IMAGE_NAME .
