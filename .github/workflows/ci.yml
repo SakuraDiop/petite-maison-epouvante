@@ -80,11 +80,11 @@ jobs:
           SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/epouvante \
           SPRING_DATASOURCE_USERNAME=admin \
           SPRING_DATASOURCE_PASSWORD=admin \
-          ./mvnw spring-boot:run &
+          nohup ./mvnw spring-boot:run > app.log 2>&1 &
 
       - name: Attendre que l'application soit disponible
         run: |
-          for i in {1..60}; do
+          for i in {1..90}; do
             if curl -s http://localhost:8080/actuator/health | grep UP; then
               echo "Application demarree"
               exit 0
@@ -92,7 +92,10 @@ jobs:
             echo "En attente de l'application..."
             sleep 2
           done
+
           echo "Application non disponible"
+          echo "===== LOGS APPLICATION ====="
+          cat app.log
           exit 1
 
       - name: Lancer test de charge k6
