@@ -39,8 +39,10 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/images/**",
                                 "/uploads/**",
-                                "/web/**"
+                                "/web/**",
+                                "/actuator/**"
                         ).permitAll()
+                        
 
                         // Lecture publique des annonces
                         .requestMatchers(HttpMethod.GET, "/annonces/**")
