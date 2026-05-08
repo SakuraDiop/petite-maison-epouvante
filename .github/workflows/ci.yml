@@ -1,3 +1,73 @@
+name: CI/CD - Petite Maison Epouvante
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  backend-ci-cd:
+    name: Build, test, dockerize, scan and publish
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend/epouvante
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: epouvante
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Rendre mvnw executable
+        run: chmod +x mvnw
+
+      - name: Build et tests Maven
+        run: ./mvnw clean verify
+
+      - name: Definir le nom de l'image Docker
+        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/epouvante-backend:latest" >> $GITHUB_ENV
+
+      - name: Construire image Docker
+        run: docker build -t $IMAGE_NAME .
+
+      - name: Scanner image Docker avec Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}
+          format: table
+          exit-code: 0
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
+
+      - name: Connexion au registre Docker GitHub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publier image Docker dans GitHub Container Registry
+        run: docker push $IMAGE_NAME
+
   k6-load-test:
     name: Load testing with k6
     runs-on: ubuntu-latest
@@ -37,7 +107,6 @@
 
       - name: Installer k6
         run: |
-          sudo gpg -k
           sudo apt-get update
           sudo apt-get install -y gnupg software-properties-common
           curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
