@@ -1,26 +1,20 @@
-name: CI/CD - Petite Maison Epouvante
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-permissions:
-  contents: read
-  packages: write
-  security-events: write
-
-jobs:
-  backend-ci-cd:
-    name: Build, test, dockerize, scan and publish
+  k6-load-test:
+    name: Load testing with k6
     runs-on: ubuntu-latest
 
     defaults:
       run:
         working-directory: backend/epouvante
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: epouvante
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+        ports:
+          - 5432:5432
 
     steps:
       - name: Recuperer le code
@@ -36,33 +30,21 @@ jobs:
       - name: Rendre mvnw executable
         run: chmod +x mvnw
 
-      - name: Compiler et lancer les tests
-        run: ./mvnw clean test
+      - name: Demarrer application Spring Boot
+        run: |
+          ./mvnw spring-boot:run &
+          sleep 40
 
-      - name: Creer le package JAR
-        run: ./mvnw package -DskipTests
+      - name: Installer k6
+        run: |
+          sudo gpg -k
+          sudo apt-get update
+          sudo apt-get install -y gnupg software-properties-common
+          curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
 
-      - name: Connexion au registre Docker GitHub
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Definir le nom de l'image Docker
-        run: echo "IMAGE_NAME=ghcr.io/sakuradiop/epouvante-backend:latest" >> $GITHUB_ENV
-
-      - name: Construire image Docker
-        run: docker build -t $IMAGE_NAME .
-
-      - name: Scanner image Docker avec Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.IMAGE_NAME }}
-          format: table
-          exit-code: 0
-          severity: CRITICAL,HIGH
-
-      - name: Publier image Docker dans GitHub Container Registry
-        if: github.ref == 'refs/heads/main'
-        run: docker push $IMAGE_NAME
+      - name: Lancer test de charge k6
+        run: |
+          k6 run ../../tests/load/annonces-load-test.js
